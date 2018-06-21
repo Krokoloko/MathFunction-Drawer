@@ -8,3 +8,24 @@ body{
   border : 1px solid;
   border-color : black;
 }
+
+nav{
+  background-color: blue;
+  height: 5em;
+}
+nav ul{
+  list-style-type: none;
+  margin: 0px;
+}
+
+ul{
+  padding: 2%;
+}
+
+li{
+  margin-right: 1em;
+}
+
+nav li{
+  float: left;
+}

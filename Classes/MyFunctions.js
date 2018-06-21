@@ -1,3 +1,5 @@
+console.log('hello world');
+
 function checkMax(num,max){
   if(num >= max){
     return true;

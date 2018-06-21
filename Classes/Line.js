@@ -1,3 +1,5 @@
+console.log('hello world');
+
 class Line{
   constructor(slope,yIntercept){
     this.slope = slope;
@@ -8,9 +10,9 @@ class Line{
     let y = this.slope * x + this.yIntercept;
     return y;
   }
-  drawNow(a,b){
+  draw(a,b){
     let beg = a || 0;
-    let end = b || canv.width || 800;
+    let end = b || window.innerWidth;
     cont.beginPath();
     cont.moveTo(beg,this.calcY(beg));
     cont.lineTo(end,this.calcY(end));

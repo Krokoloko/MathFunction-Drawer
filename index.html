@@ -6,9 +6,21 @@
     <title>mathFunctionFlow</title>
   </head>
   <body>
+    <nav id="nav">
+      <ul>
+        <li> <input type="submit" value="Start" id="switch"> </li>
+        <li> <input type="number" value="" autofocus placeholder="A" id="A" > </li>
+        <li> <input type="number" value="" placeholder="B" id="B"> </li>
+        <li> <input type="number" value="" placeholder="yIntercept" id="yInt"> </li>
+        <li> <input type="number" value="" placeholder="spread" id="spread" > </li>
+        <li> <input type="number" min="0.001" max="100" id="step"> </li>
+        <li> <input type="number" placeholder="playSpeed" id="speed"> </li>
+      </ul>
+    </nav>
 
   </body>
   <script src="Classes/MyFunctions.js" charset="utf-8"></script>
   <script src="Classes/Line.js" charset="utf-8"></script>
+  <script src="Classes/three.js" charset="utf-8"></script>
   <script src="script.js" charset="utf-8"></script>
 </html>
