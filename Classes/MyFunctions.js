@@ -44,6 +44,11 @@ function pitagoras(a,b,type){
 
 }
 
+function forFunc(func,loop){
+  for (let i = 0; i < loop; i++) {
+    func(i);
+  }
+}
 function clamp(number, min, max) {
   return Math.min(Math.max(number, min),max);
 }

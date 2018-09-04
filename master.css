@@ -9,10 +9,15 @@ body{
   border-color : black;
 }
 
+#variables{
+  padding: 0px;
+}
+
 nav{
   background-color: blue;
   height: 5em;
 }
+
 nav ul{
   list-style-type: none;
   margin: 0px;
