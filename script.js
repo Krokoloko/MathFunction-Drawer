@@ -9,19 +9,24 @@ const speedDisplay = document.getElementById("sliderDisplay");
 const navBar = document.getElementById('nav');
 
 let scene, render, camera, drawCount, positions, navigation, canRotate, canMove;
-let AInp,BInp,EInp,YInp;
+let AInp,BInp,EInp,YInp,mode;
 let line = {};
 
 function rescanValues(){
   AInp = document.getElementById('A');
-  BInp = document.getElementById('B');
-  EInp = document.getElementById('C');
+  BInp = document.getElementById('B') || document.getElementById('spread');
+  EInp = document.getElementById('E') || document.getElementById('spread');
   YInp = document.getElementById('yInt');
+  mode = dDown.value
 }
 
-functionLib = [{ind : 0,func : function(a,e,b,y){return a*b+y;},html : '<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
-,{ind : 1,func : function(a,e,b,y){return Math.pow(a,e)*b+y},html : '<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" placeholder="Exponent" id="E"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
-,{ind : 2, func : function(a,e,b,y){return 5;},html : ''}];
+let funcs = [function(x,a,e,b,y){return a*b+y},
+             function(x,a,e,b,y){return x*Math.pow(a,e)*b+y},
+             function(x,a,e,b,y){console.log((x**e));return (x**e)%a+y;}];
+console.log(funcs[2](3,0,2,0,100));
+functionLib = [{ind : 0,func : funcs[0],html : '<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
+,{ind : 1,func : funcs[1],html : '<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" placeholder="Exponent" id="E"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
+,{ind : 2, func : funcs[2] ,html : '<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="Exponent" id="E"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt">'}];
 
 valueHolder.innerHTML = functionLib[dDown.value].html;
 rescanValues();
@@ -29,6 +34,7 @@ rescanValues();
 dDown.onmousedown = function(){
   valueHolder.innerHTML = functionLib[dDown.value].html;
   line.func = functionLib[dDown.value].func;
+  rescanValues();
   console.log(valueHolder);
 };
 
@@ -47,7 +53,7 @@ let webWidth = window.innerWidth;
 //three js
 scene = new THREE.Scene();
 render = new THREE.WebGLRenderer();
-camera = new THREE.PerspectiveCamera(45,webWidth/webHeight,0.1,100000000000000000);
+camera = new THREE.PerspectiveCamera(45,webWidth/webHeight,0.1,1000000);
 navigation = new ThreeNavigator(camera);
 console.log(speedDisplay);
 
@@ -78,7 +84,7 @@ let OnUpdateValues = function(){
   line.spread = spreadInp.valueAsNumber || 200;
   line.x = -(line.spread/2);
   line.speed = speedInp.valueAsNumber || 1;
-
+  line.func = functionLib[dDown.value].func;
 }
 
 
@@ -128,7 +134,7 @@ function updatePos(){
   let x=y=z=index=0;
 
   x = line.x;
-  y = x*line.A*line.B+line.yIntercept;
+  y = x*line.func(x,line.A,line.E,line.B,line.yIntercept)
 
   positions = line.mesh.geometry.attributes.position.array;
 
@@ -138,22 +144,19 @@ function updatePos(){
     positions[index++] = z;
 
     x = line.x;
-    y = x*line.func(line.A,line.B,line.E,line.yIntercept);
+    y = line.func(x,line.A,line.E,line.B,line.yIntercept);
     // y= Math.tan(x)*x;+line.yIntercept;
+    //console.log(y);
     z = 0;
-
-    line.x += 1;
+    line.x++;
     line.currentLine = positions;
   }
-
-
 }
 
 function setEvents(){
   render.domElement.onmousedown = function(){
     canRotate = true;
   };
-
   render.domElement.onmousemove = function(e){
     if(canRotate){
       navigation.rotate(e.movementY/100,e.movementX/100);
@@ -161,7 +164,7 @@ function setEvents(){
   };
   render.domElement.onmouseover = function(){
     canMove = true;
-    console.log('mouseOver');
+    //console.log('mouseOver');
   };
   render.domElement.onkeypress = function(event){
     console.log(event);
@@ -194,7 +197,6 @@ function setEvents(){
     canMove = false;
     console.log('mouseOut');
   };
-
   render.domElement.onmouseup= function(){
     canRotate = false;
   };
@@ -213,7 +215,7 @@ function loop()
   if(!pause)
   {
     // line.mesh.geometry.vertices.push(new THREE.Vector3(line.x,line.A*line.x*line.B+line.yIntercept,0));
-    console.log(drawCount + line.speed);
+    //  console.log(drawCount + line.speed);
     drawCount = (drawCount + line.speed)% line.spread;
 
     line.mesh.geometry.setDrawRange(0,drawCount);
