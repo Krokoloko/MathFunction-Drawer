@@ -19,18 +19,23 @@ function rescanValues(){
   mode = dDown.value
 }
 
-let funcs = [function(x,a,e,b,y){return a*b+y},
-             function(x,a,e,b,y){return x*(a**e)*b+y},
-             function(x,a,e,b,y){return (x**e)%a+y;},
-             function(x,a,e,b,y){return (Math.tan(x)**a)*b+y},
-             function(x,a,e,b,y){return (Math.cos(x)**a)*b+y},
-             function(x,a,e,b,y){return (Math.sin(x)**a)*b+y}];
+let funcs = [[function(x,a,e,b,y){return a*b+y},function(x,a,e,b,y){return 0}],
+             [function(x,a,e,b,y){return x*(a**e)*b+y},function(x,a,e,b,y){return 0}],
+             [function(x,a,e,b,y){return (x**e)%a+y},function(x,a,e,b,y){return 0}],
+             [function(x,a,e,b,y){return (Math.tan(x)**a)*b+y},function(x,a,e,b,y){return 0}],
+             [function(x,a,e,b,y){return (Math.cos(x)**a)*b+y},function(x,a,e,b,y){return 0}],
+             [function(x,a,e,b,y){return (Math.sin(x)**a)*b+y},function(x,a,e,b,y){return 0}],
+             [function(x,a,e,b,y){return Math.sin((x*Math.PI)/a)*b+y},function(x,a,e,b,y){}],
+             [function(x,a,e,b,y){return a + (10 * (b ** x))},function(x,a,e,b,y){return 0}]
+            ];
 functionLib = [{ind : 0, func : funcs[0], html : '<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
 ,{ind : 1,func : funcs[1], html : '<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" placeholder="Exponent" id="E"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
 ,{ind : 2, func : funcs[2], html : '<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="Exponent" id="E"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt">'}
-,{ind : 3, func: funcs[3], html : '<li> <input type="number" autofocus placeholder="Tangent" id="A" ><li> <input type="number" placeholder="B" id="B"> </li> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
-,{ind : 4, func: funcs[4], html : '<li> <input type="number" autofocus placeholder="Cosinus" id="A" ><li> <input type="number" placeholder="B" id="B"> </li> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
-,{ind : 5, func: funcs[5], html : '<li> <input type="number" autofocus placeholder="Sinus" id="A" ><li> <input type="number" placeholder="B" id="B"> </li> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}];
+,{ind : 3, func: funcs[3], html : '<li> <input type="number" autofocus placeholder="Tangent" id="A" ></li><li> <input type="number" placeholder="B" id="B"> </li> <li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
+,{ind : 4, func: funcs[4], html : '<li> <input type="number" autofocus placeholder="Cosinus" id="A" ></li><li> <input type="number" placeholder="B" id="B"> </li> <li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
+,{ind : 5, func: funcs[5], html : '<li> <input type="number" autofocus placeholder="Sinus" id="A" ></li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
+,{ind : 6, func: funcs[6], html : '<li> <input type="number" autofocus placeholder="arc mulitplier" id="A"</li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
+,{ind : 7,func : funcs[7], html : '<li> <input type="number" autofocus placeholder="expToNextLvl" id="A" > </li><li> <input type="number" placeholder="Multiplier" id="B"> </li><li> <input type="number" placeholder="currentLvl" id="E"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}];
 
 valueHolder.innerHTML = functionLib[dDown.value].html;
 rescanValues();
