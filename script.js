@@ -1,50 +1,60 @@
 let valueHolder = document.getElementById('variables');
 let valueEdits = document.getElementsByTagName('input');
-const dDown = document.getElementById('dropDown');
+const dDownAxis = document.getElementById('dropDownAxis');
+const dDownFunctions = document.getElementById('dropDownFunctions');
 const StartButton = document.getElementById('switch');
-const spreadInp = document.getElementById('spread');
-const speedInp = document.getElementById('speed');
-const speedDisplay = document.getElementById("sliderDisplay");
 const navBar = document.getElementById('nav');
 
 let scene, render, camera, drawCount, positions, navigation, canRotate, canMove;
 let AInp,BInp,EInp,YInp,mode;
-let line = {};
+let line = {y:{},z:{},line:{}};
 
 function rescanValues(){
   AInp = document.getElementById('A');
-  BInp = document.getElementById('B') || document.getElementById('spread');
-  EInp = document.getElementById('E') || document.getElementById('spread');
+  BInp = document.getElementById('B');
+  EInp = document.getElementById('E');
   YInp = document.getElementById('yInt');
-  mode = dDown.value
 }
 
-let funcs = [[function(x,a,e,b,y){return a*b+y},function(x,a,e,b,y){return 0}],
-             [function(x,a,e,b,y){return x*(a**e)*b+y},function(x,a,e,b,y){return 0}],
-             [function(x,a,e,b,y){return (x**e)%a+y},function(x,a,e,b,y){return 0}],
-             [function(x,a,e,b,y){return (Math.tan(x)**a)*b+y},function(x,a,e,b,y){return 0}],
-             [function(x,a,e,b,y){return (Math.cos(x)**a)*b+y},function(x,a,e,b,y){return 0}],
-             [function(x,a,e,b,y){return (Math.sin(x)**a)*b+y},function(x,a,e,b,y){return 0}],
-             [function(x,a,e,b,y){return Math.sin((x*Math.PI)/a)*b+y},function(x,a,e,b,y){}],
-             [function(x,a,e,b,y){return a + (10 * (b ** x))},function(x,a,e,b,y){return 0}]
-            ];
-functionLib = [{ind : 0, func : funcs[0], html : '<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
-,{ind : 1,func : funcs[1], html : '<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" placeholder="Exponent" id="E"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
-,{ind : 2, func : funcs[2], html : '<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="Exponent" id="E"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt">'}
-,{ind : 3, func: funcs[3], html : '<li> <input type="number" autofocus placeholder="Tangent" id="A" ></li><li> <input type="number" placeholder="B" id="B"> </li> <li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
-,{ind : 4, func: funcs[4], html : '<li> <input type="number" autofocus placeholder="Cosinus" id="A" ></li><li> <input type="number" placeholder="B" id="B"> </li> <li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
-,{ind : 5, func: funcs[5], html : '<li> <input type="number" autofocus placeholder="Sinus" id="A" ></li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
-,{ind : 6, func: funcs[6], html : '<li> <input type="number" autofocus placeholder="arc mulitplier" id="A"</li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}
-,{ind : 7,func : funcs[7], html : '<li> <input type="number" autofocus placeholder="expToNextLvl" id="A" > </li><li> <input type="number" placeholder="Multiplier" id="B"> </li><li> <input type="number" placeholder="currentLvl" id="E"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}];
+function onModeAxis(){
+  mode = dDownAxis.value;
+  if (mode == 'Z') {
+    valueHolder.innerHTML = htmlLib[dDownFunctions.value].z;
+  }
+  if(mode == 'Y'){
+    valueHolder.innerHTML = htmlLib[dDownFunctions.value].y;
+  }
+}
 
-valueHolder.innerHTML = functionLib[dDown.value].html;
+let funcs = [[function(x,a,e,b,y){return a*b+y},function(x,a,e,b,y){return a*b+y}],
+             [function(x,a,e,b,y){return x*(a**e)*b+y},function(x,a,e,b,y){return x*(a**e)*b+y}],
+             [function(x,a,e,b,y){return (x**e)%a+y},function(x,a,e,b,y){return (x**e)%a+y}],
+             [function(x,a,e,b,y){return (Math.tan(x)**a)*b+y},function(x,a,e,b,y){return (Math.tan(x)**a)*b+y}],
+             [function(x,a,e,b,y){return (Math.cos(x)**a)*b+y},function(x,a,e,b,y){return (Math.cos(x)**a)*b+y}],
+             [function(x,a,e,b,y){return (Math.sin(x)**a)*b+y},function(x,a,e,b,y){return (Math.sin(x)**a)*b+y}],
+             [function(x,a,e,b,y){return Math.sin((x*Math.PI)/a)**e*b+y},function(x,a,e,b,y){return Math.sin((x*Math.PI)/a)**e*b+y}]
+            ];
+
+htmlLib = [{y: '<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>',z:'<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'},
+           {y: '<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" placeholder="Exponent" id="E"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>',z:'<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" placeholder="Exponent" id="E"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'},
+           {y:'<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="Exponent" id="E"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt">',z:'<li> <input type="number" autofocus placeholder="A" id="A" > </li><li> <input type="number" placeholder="Exponent" id="E"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt">'},
+           {y:'<li> <input type="number" autofocus placeholder="Tangent" id="A" ></li><li> <input type="number" placeholder="B" id="B"> </li> <li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>',z:'<li> <input type="number" autofocus placeholder="Tangent" id="A" ></li><li> <input type="number" placeholder="B" id="B"> </li> <li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'},
+           {y:'<li> <input type="number" autofocus placeholder="Cosinus" id="A" ></li><li> <input type="number" placeholder="B" id="B"> </li> <li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>',z:'<li> <input type="number" autofocus placeholder="Cosinus" id="A" ></li><li> <input type="number" placeholder="B" id="B"> </li> <li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'},
+           {y:'<li> <input type="number" autofocus placeholder="Sinus" id="A" ></li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>',z:'<li> <input type="number" autofocus placeholder="Sinus" id="A" ></li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'},
+           {y:'<li> <input type="number" autofocus placeholder="arc mulitplier" id="A"</li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" placeholder="Exponent" id="E"><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>',z:'<li> <input type="number" autofocus placeholder="arc mulitplier" id="A"</li><li> <input type="number" placeholder="B" id="B"> </li><li> <input type="number" placeholder="Exponent" id="E"><li> <input type="number" step="0.5" placeholder="yIntercept" id="yInt"> </li>'}]
+
+onModeAxis();
 rescanValues();
 
-dDown.onmousedown = function(){
-  valueHolder.innerHTML = functionLib[dDown.value].html;
-  line.func = functionLib[dDown.value].func;
+dDownAxis.onmousedown = function(){
+  onModeAxis();
   rescanValues();
-  console.log(valueHolder);
+}
+
+dDownFunctions.onmousedown = function(){
+  line.func = funcs[dDownFunctions.valueAsNumber];
+  onModeAxis();
+  rescanValues();
 };
 
 let pause = true;
@@ -58,8 +68,6 @@ scene = new THREE.Scene();
 render = new THREE.WebGLRenderer();
 camera = new THREE.PerspectiveCamera(45,webWidth/webHeight,0.1,1000000);
 navigation = new ThreeNavigator(camera);
-console.log(speedDisplay);
-
 
 //html events
 
@@ -71,30 +79,28 @@ for (var i = 0; i < valueEdits.length; i++) {
 
 StartButton.onclick = function(){
   OnUpdateValues();
-  OnPause();
-  StartButton.value = "Pause";
 }
-
-
 
 // delegates
 let OnUpdateValues = function(){
   console.log('updated values');
-  line.A = AInp.valueAsNumber || 1;
-  line.B = BInp.valueAsNumber || 1;
-  line.E = EInp.valueAsNumber || 2;
-  line.yIntercept = YInp.valueAsNumber || 0;
-  line.spread = spreadInp.valueAsNumber || 200;
+  if(mode == "Y"){
+    line.y.A = AInp.valueAsNumber || 1;
+    line.y.B = BInp.valueAsNumber || 1;
+    line.y.E = EInp.valueAsNumber || 2;
+    line.y.yIntercept = YInp.valueAsNumber || 0;
+  }
+  if(mode == "Z"){
+    line.z.A = AInp.valueAsNumber || 1;
+    line.z.B = BInp.valueAsNumber || 1;
+    line.z.E = EInp.valueAsNumber || 2;
+    line.z.yIntercept = YInp.valueAsNumber || 0;
+  }
+
+  line.spread = 400;
   line.x = -(line.spread/2);
-  line.speed = speedInp.valueAsNumber || 1;
-  line.func = functionLib[dDown.value].func;
+  line.func = funcs[dDownFunctions.value];
 }
-
-
-let OnPause = function(){
-  console.log('switch');
-  pause = !pause;
-};
 
 let OnWebResize = function(){
   webWidth = window.innerWidth;
@@ -111,7 +117,7 @@ function setUp(){
   setEvents();
 
   document.body.appendChild(render.domElement);
-  camera.position.set(0,0,200);
+  camera.position.set(0,0,150);
 
   line.geometry = new THREE.BufferGeometry();
   positions = new Float32Array(line.spread*3);
@@ -129,7 +135,6 @@ function setUp(){
   scene.add(line.mesh);
   render.render(scene,camera);
 
-  console.log(line.mesh.geometry);
   loop();
 }
 
@@ -137,7 +142,8 @@ function updatePos(){
   let x=y=z=index=0;
 
   x = line.x;
-  y = line.func(x,line.A,line.E,line.B,line.yIntercept)
+  y = line.func[0](x,line.y.A,line.y.E,line.y.B,line.y.yIntercept)||1;
+  z = line.func[1](x,line.z.A,line.z.E,line.z.B,line.z.yIntercept)||1;;
 
   positions = line.mesh.geometry.attributes.position.array;
 
@@ -147,10 +153,8 @@ function updatePos(){
     positions[index++] = z;
 
     x = line.x;
-    y = line.func(x,line.A,line.E,line.B,line.yIntercept);
-    // y= Math.tan(x)*x;+line.yIntercept;
-    //console.log(y);
-    z = 0;
+    y = line.func[0](x,line.y.A,line.y.E,line.y.B,line.y.yIntercept)||1;
+    z = line.func[1](x,line.z.A,line.z.E,line.z.B,line.z.yIntercept)||1;
     line.x++;
     line.currentLine = positions;
   }
@@ -167,7 +171,6 @@ function setEvents(){
   };
   render.domElement.onmouseover = function(){
     canMove = true;
-    //console.log('mouseOver');
   };
   render.domElement.onkeypress = function(event){
     console.log(event);
@@ -211,31 +214,29 @@ function setEvents(){
 function loop()
 {
   requestAnimationFrame(loop);
-  sliderDisplay.innerHTML = speedInp.value;
+  //sliderDisplay.innerHTML = speedInp.value;
   // console.log('loop');
 
   if(webWidth != window.innerWidth || webHeight != window.innerHeight)
   {
     OnWebResize();
   }
-  if(!pause)
-  {
-    // line.mesh.geometry.vertices.push(new THREE.Vector3(line.x,line.A*line.x*line.B+line.yIntercept,0));
-    //console.log(drawCount + line.speed);
-    drawCount = (drawCount + 1)% line.spread;
 
-    line.mesh.geometry.setDrawRange(0,drawCount);
+  drawCount = (drawCount + 1)% line.spread;
 
-    if(drawCount === 0){
-      OnUpdateValues();
-      //console.log('drawcount === 0');
-      updatePos();
+  line.mesh.geometry.setDrawRange(0,drawCount);
 
-      line.geometry.attributes.position.needsUpdate = true;
-    }
+  if(drawCount === 0){
+    OnUpdateValues();
+    updatePos();
+
+    line.geometry.attributes.position.needsUpdate = true;
   }
 
   render.render(scene,camera);
 }
 
-setUp();
+window.onload = function()
+{
+  setUp();
+}

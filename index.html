@@ -7,8 +7,13 @@
   </head>
   <body>
     <nav id="nav">
+
       <ul>
-        <li><select id="dropDown">
+        <li><select id="dropDownAxis">
+          <option value="Y">Y</option>
+          <option value="Z">Z</option>
+        </select></li>
+        <li><select id="dropDownFunctions">
           <option value="0">Linear</option>
           <option value="1">Quadratic</option>
           <option value="2">Waves</option>
@@ -16,13 +21,12 @@
           <option value="4">Cosinus</option>
           <option value="5">Sinus</option>
           <option value="6">Arc</option>
-          <option value="7">Duncan exp formula</option>
+          <!-- <option value="7">Duncan exp formula</option> -->
         </select></li>
         <li> <input type="submit" value="Start" id="switch"> </li>
         <ul id="variables">
 
         </ul>
-        <li><input type="number" placeholder="spread" id="spread" ></li>
       </ul>
     </nav>
 
